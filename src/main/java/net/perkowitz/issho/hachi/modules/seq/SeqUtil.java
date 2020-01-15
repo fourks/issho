@@ -226,7 +226,7 @@ public class SeqUtil {
         paletteMap.put("pink", Color.DIM_PINK);
         paletteMap.put("blue", Color.BRIGHT_BLUE);
         paletteMap.put("green", Color.DIM_GREEN);
-        paletteMap.put("red", Color.BRIGHT_RED);
+        paletteMap.put("red", Color.DIM_RED);
         paletteMap.put("orange", Color.BRIGHT_ORANGE);
         paletteMap.put("purple", Color.BRIGHT_PURPLE);
         paletteMap.put("magenta", Color.BRIGHT_PINK_PURPLE);

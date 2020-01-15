@@ -3,7 +3,9 @@ package net.perkowitz.issho.hachi;
 import lombok.Getter;
 import net.perkowitz.issho.devices.*;
 import net.perkowitz.issho.hachi.modules.Module;
+import net.perkowitz.issho.hachi.modules.Muteable;
 import net.perkowitz.issho.hachi.modules.TextDisplay;
+import net.perkowitz.issho.hachi.modules.shihai.ShihaiModule;
 import net.perkowitz.issho.util.Terminal;
 
 import static net.perkowitz.issho.hachi.HachiUtil.*;
@@ -73,11 +75,26 @@ public class HachiDeviceManager implements GridListener {
         // modules
         for (int index = 0; index < modules.length; index++) {
             GridButton button = GridButton.at(HachiUtil.MODULE_BUTTON_SIDE, index);
-            if (modules[index] == activeModule) {
-                display.setButton(button, COLOR_SET);
+            Module module = modules[index];
+            boolean muted = false;
+            if (module == activeModule) {
+                display.setButton(button, COLOR_SELECTED);
             } else {
                 display.setButton(button, COLOR_UNSET);
             }
+// for allowing mutes from top buttons
+//            if (module instanceof Muteable) {
+//                muted = ((Muteable)modules[index]).isMuted();
+//            }
+//            if (module == activeModule && !muted) {
+//                display.setButton(button, COLOR_SELECTED);
+//            } else if (module == activeModule) {
+//                display.setButton(button, COLOR_SELECTED_UNSET);
+//            } else if (!muted) {
+//                display.setButton(button, COLOR_SET);
+//            } else {
+//                display.setButton(button, COLOR_UNSET);
+//            }
         }
 
         if (hachiController.isClockRunning()) {
@@ -131,16 +148,17 @@ public class HachiDeviceManager implements GridListener {
 //        System.out.printf("Hachi buttonPressed: %s, %d\n", button, velocity);
         GridControl control = new GridControl(button, button.getIndex());
         control.press();
+        int index = button.getIndex();
         if (button.getSide() == HachiUtil.MODULE_BUTTON_SIDE && button.getIndex() < modules.length) {
-            // top row used for module switching
+            // wait for button release (but don't pass thru to active module)
             selectModule(button.getIndex());
-
 
         } else if (button.equals(PLAY_BUTTON)) {
             hachiController.pressPlay();
             redraw();
 
         } else if (button.equals(EXIT_BUTTON)) {
+            // wait for button release (but don't pass thru to active module)
 
         } else {
             // everything else passed through to active module
@@ -152,11 +170,26 @@ public class HachiDeviceManager implements GridListener {
 
     public void onButtonReleased(GridButton button) {
 //        System.out.printf("Hachi buttonReleased: %s\n", button);
-        GridControl control = new GridControl(button, button.getIndex());
+        int index = button.getIndex();
+        GridControl control = new GridControl(button, index);
         Long elapsed = control.release();
         if (button.getSide() == HachiUtil.MODULE_BUTTON_SIDE) {
             // top row used for module switching
+// for allowing mutes from top buttons
+//            if (index < modules.length && modules[index] != null) {
+//                if (elapsed < MODULE_MUTE_PRESS_IN_MILLIS) {
+//                    selectModule(button.getIndex());
+//                } else if (modules[index] instanceof Muteable) {
+//                    boolean muted = ((Muteable)modules[index]).isMuted();
+//                    ((Muteable)modules[index]).mute(!muted);
+//                }
+//                redraw();
+//                if (activeModule instanceof ShihaiModule) {
+//                    ((ShihaiModule)activeModule).redraw();
+//                }
+//            }
         } else if (button.equals(PLAY_BUTTON)) {
+            // don't pass thru to active module
         } else if (button.equals(EXIT_BUTTON)) {
             if (elapsed > EXIT_PRESS_IN_MILLIS || HachiController.isDebugMode()) {
                 hachiController.pressExit();

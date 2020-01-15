@@ -16,11 +16,12 @@ public class HachiUtil {
     public static final GridButton PLAY_BUTTON = GridButton.at(GridButton.Side.Left, 0);
     public static final GridButton EXIT_BUTTON = GridButton.at(GridButton.Side.Left, 1);
 
-    public static Color COLOR_SET = Color.WHITE;
+    public static Color COLOR_SET = Color.DIM_RED;
     public static Color COLOR_UNSET = Color.DARK_GRAY;
-    public static Color COLOR_SELECTED = Color.BRIGHT_YELLOW;
+    public static Color COLOR_SELECTED = Color.WHITE; //Color.BRIGHT_YELLOW;
     public static Color COLOR_SELECTED_UNSET = Color.DIM_YELLOW;
 
     public static int EXIT_PRESS_IN_MILLIS = 2000;
+    public static int MODULE_MUTE_PRESS_IN_MILLIS = 250;
 
 }
